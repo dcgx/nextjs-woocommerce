@@ -1,19 +1,21 @@
 import Header from '../src/components/layout/header'
 import Footer from '../src/components/layout/footer'
+import Products from '../src/components/products'
 
 import axios from 'axios'
-import { HEADER_FOOTER_ENDPOINT } from '../src/utils/constants/endpoints'
+import {
+  HEADER_FOOTER_ENDPOINT,
+  GET_PRODUCTS_ENDPOINT,
+} from '../src/utils/constants/endpoints'
 
-export default function Home({ data }) {
-  const { header, footer } = data.data
+export default function Home({ headerFooter, products }) {
+  console.log(products, 'home products')
+  const { header, footer } = headerFooter || {}
   return (
     <div>
       <Header header={header} />
       <main>
-        <h1>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-        <p className="text-red-600">text color</p>
+        <Products products={products} />
       </main>
 
       <Footer footer={footer} />
@@ -22,12 +24,13 @@ export default function Home({ data }) {
 }
 
 export async function getStaticProps() {
-  const { data } = await axios.get(HEADER_FOOTER_ENDPOINT)
-  console.log(data, 'data')
+  const { data: headerFooterData } = await axios.get(HEADER_FOOTER_ENDPOINT)
+  const { data: productsData } = await axios.get(GET_PRODUCTS_ENDPOINT)
 
   return {
     props: {
-      data: data || {},
+      headerFooter: headerFooterData?.data ?? {},
+      products: productsData?.products || {},
     },
     revalidate: 1,
   }

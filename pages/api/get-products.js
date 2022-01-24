@@ -20,6 +20,8 @@ export default async function handler(req, res) {
       per_page: perPage || 50,
     })
 
+    console.log(data, 'products')
+
     responseData.success = true
     responseData.products = data
     res.json(responseData)
